@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.ascendcorp.spring.serviceresponsetimemetrics.configuration.RestTemplateConfiguration,\
+  com.ascendcorp.spring.serviceresponsetimemetrics.dto.ServiceResponseTimeConfig
