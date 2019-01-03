@@ -1,0 +1,19 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health, prometheus, metrics
+      base-path: /
+      path-mapping:
+        health: s1/health
+        info: s1/info
+        prometheus: /metrics
+        metrics: /actuator/metrics
+
+server:
+  port: 8080
+
+service-response-time:
+  grouped-urls:
+    - url: http://www.google.com
+    - url: http://www.mocky.io/v2/.*
