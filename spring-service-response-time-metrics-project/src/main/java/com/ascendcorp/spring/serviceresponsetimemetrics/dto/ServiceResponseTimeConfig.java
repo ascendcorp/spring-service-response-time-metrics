@@ -4,32 +4,36 @@ import com.ascendcorp.spring.serviceresponsetimemetrics.configuration.ServiceReq
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "service-response-time")
 public class ServiceResponseTimeConfig {
 
-    private List<GroupedUrl> groupedUrls;
+    private List<String> groupedUrls;
 
-    public ServiceResponseTimeConfig(ApplicationContext ctx) {
+    @Bean
+    public Optional addGlobalInterceptor(ApplicationContext ctx) {
+        System.out.println("Add global interceptor " + this.groupedUrls);
+
         Map<String, RestTemplate> allRestTemplate = ctx.getBeansOfType(RestTemplate.class);
 
         for (Map.Entry<String, RestTemplate> entry : allRestTemplate.entrySet()) {
             setClientRequestInterceptorToInterceptor(entry.getValue());
         }
+
+        return Optional.empty();
     }
 
-    // add interceptor to all rest template as a global one
     private void setClientRequestInterceptorToInterceptor(RestTemplate restTemplate) {
         List interceptors = restTemplate.getInterceptors();
-
-        // TODO instead of create individual, try to use shared interceptor
-        interceptors.add(new ServiceRequestInterceptor(groupedUrls));
+        interceptors.add(new ServiceRequestInterceptor(this.groupedUrls));
     }
 }

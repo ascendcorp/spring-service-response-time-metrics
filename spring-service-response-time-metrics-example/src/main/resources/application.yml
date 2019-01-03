@@ -15,5 +15,6 @@ server:
 
 service-response-time:
   grouped-urls:
-    - url: http://www.google.com
-    - url: http://www.mocky.io/v2/.*
+    - http://www.google.com
+    - http://www.mocky.io/v2/.*
+

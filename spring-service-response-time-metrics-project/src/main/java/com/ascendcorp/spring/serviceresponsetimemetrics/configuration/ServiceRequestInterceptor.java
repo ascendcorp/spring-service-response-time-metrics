@@ -22,15 +22,14 @@ This class purpose for measuring Service (call to) response time
 
 public class ServiceRequestInterceptor implements ClientHttpRequestInterceptor {
 
-    private List<GroupedUrl> groupedList;
+    private List<String> groupedUrls;
 
-    public ServiceRequestInterceptor(List<GroupedUrl> groupedList) {
-        this.groupedList = groupedList;
+    public ServiceRequestInterceptor(List<String> groupedUrls) {
+        this.groupedUrls = groupedUrls;
     }
 
     @Override
     public ClientHttpResponse intercept(HttpRequest httpRequest, byte[] bytes, ClientHttpRequestExecution clientHttpRequestExecution) {
-
         ClientHttpResponse response = null;
         try {
             LocalTime start = LocalTime.now();
@@ -50,10 +49,10 @@ public class ServiceRequestInterceptor implements ClientHttpRequestInterceptor {
     private String toRegexPath(URI uri) {
         final String fullPath = uri.toString();
 
-        if(groupedList == null) return fullPath;
+        if(groupedUrls == null) return fullPath;
 
-        for(GroupedUrl url : groupedList) {
-            if(isMatch(fullPath, createRegexForURL(url.getUrl()))) return createRegexForURL(url.getUrl());
+        for(String url : groupedUrls) {
+            if(isMatch(fullPath, createRegexForURL(url))) return createRegexForURL(url);
         }
 
         return fullPath;
