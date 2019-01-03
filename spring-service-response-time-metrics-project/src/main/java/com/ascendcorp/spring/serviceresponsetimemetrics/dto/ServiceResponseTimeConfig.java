@@ -28,6 +28,8 @@ public class ServiceResponseTimeConfig {
     // add interceptor to all rest template as a global one
     private void setClientRequestInterceptorToInterceptor(RestTemplate restTemplate) {
         List interceptors = restTemplate.getInterceptors();
+
+        // TODO instead of create individual, try to use shared interceptor
         interceptors.add(new ServiceRequestInterceptor(groupedUrls));
     }
 }
