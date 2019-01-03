@@ -50,6 +50,8 @@ public class ServiceRequestInterceptor implements ClientHttpRequestInterceptor {
     private String toRegexPath(URI uri) {
         final String fullPath = uri.toString();
 
+        if(groupedList == null) return fullPath;
+
         for(GroupedUrl url : groupedList) {
             if(isMatch(fullPath, createRegexForURL(url.getUrl()))) return createRegexForURL(url.getUrl());
         }
