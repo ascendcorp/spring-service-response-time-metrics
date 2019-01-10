@@ -17,9 +17,15 @@ public class WelcomeController {
         this.serviceImpl = serviceImpl;
     }
 
-    @RequestMapping(path = "/", method = RequestMethod.GET)
+    @RequestMapping(path = "/demo1", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<String> welcome() {
-        return serviceImpl.demo();
+    public ResponseEntity<String> demo1() {
+        return serviceImpl.demo1();
+    }
+
+    @RequestMapping(path = "/demo2", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<String> demo2() {
+        return serviceImpl.demo2();
     }
 }

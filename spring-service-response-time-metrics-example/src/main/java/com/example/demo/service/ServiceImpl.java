@@ -16,9 +16,30 @@ public class ServiceImpl {
         this.restTemplate = restTemplate;
     }
 
-    public ResponseEntity<String> demo() {
+    public ResponseEntity<String> demo1() {
 
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl("http://www.mocky.io/v2/5b31c0e7310000703a1293ad?mocky-delay=2500ms")
+                .build()
+                .encode();
+        try {
+            ResponseEntity<String> response = restTemplate.getForEntity(uriComponents.toUri(), String.class);
+
+            if (response != null) {
+                String responseCode = response.getBody();
+
+                return ResponseEntity.ok(responseCode);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok("default welcome API return to you");
+    }
+
+
+    public ResponseEntity<String> demo2() {
+
+        UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl("https://mock-url/vas-service/packages?customer_group=NEW_USER")
                 .build()
                 .encode();
         try {
