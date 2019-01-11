@@ -8,6 +8,7 @@ import org.springframework.http.client.ClientHttpResponse;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.List;
@@ -66,5 +67,13 @@ public class ServiceRequestInterceptor implements ClientHttpRequestInterceptor {
     private static boolean isMatch(String path, String regex) {
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(path).matches();
+    }
+
+    public static void main(String[] args) throws URISyntaxException {
+
+        boolean result = isMatch("https://10.224.1.50/vas-service/api/v1/packages?customer_group=NEW_USER", ".*/vas-service/api/v1/packages.*");
+        // boolean result = isMatch("http://www.mocky.io/v2/5b31c0e7310000703a1293ad?mocky-delay=2500ms", "http://www.mocky.io/v2/.*");
+
+        System.out.println("... " + result);
     }
 }
