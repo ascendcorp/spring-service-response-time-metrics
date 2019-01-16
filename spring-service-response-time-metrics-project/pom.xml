@@ -5,7 +5,7 @@
 
 	<groupId>com.ascendcorp</groupId>
 	<artifactId>spring-service-response-time-metrics</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<packaging>jar</packaging>
 
 	<name>spring-service-response-time-metrics</name>
@@ -42,5 +42,4 @@
 			<artifactId>micrometer-registry-prometheus</artifactId>
 		</dependency>
 	</dependencies>
-
 </project>
