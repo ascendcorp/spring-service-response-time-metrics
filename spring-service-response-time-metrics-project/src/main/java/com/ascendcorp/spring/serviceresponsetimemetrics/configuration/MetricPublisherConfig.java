@@ -19,13 +19,14 @@ public class MetricPublisherConfig {
     }
 
     public static void publish(MetricInfo metricInfo) {
-        metricInfoMap.put(metricInfo.getEndpoint(), metricInfo);
-        ToDoubleFunction referenceMethod = (value) -> instance.getDurationInMilliSec(metricInfo.getEndpoint());
+        String metricInfoKey = metricInfo.getHttpMethod().toString() + metricInfo.getEndpoint();
+        metricInfoMap.put(metricInfoKey, metricInfo);
+        ToDoubleFunction referenceMethod = (value) -> instance.getDurationInMilliSec(metricInfoKey);
 
-        Metrics.gauge(NAME_RESPONSE_TIME_MS, Tags.of("status", Integer.toString(metricInfo.getHttpStatus()), "uri", metricInfo.getEndpoint()), instance, referenceMethod);
+        Metrics.gauge(NAME_RESPONSE_TIME_MS, Tags.of("status", Integer.toString(metricInfo.getHttpStatus()), "method", metricInfo.getHttpMethod().toString(), "uri", metricInfo.getEndpoint()), instance, referenceMethod);
     }
 
-    private Long getDurationInMilliSec(String endpoint) {
-        return metricInfoMap.get(endpoint).getDurationInMilliSec();
+    private Long getDurationInMilliSec(String key) {
+        return metricInfoMap.get(key).getDurationInMilliSec();
     }
 }
