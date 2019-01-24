@@ -67,12 +67,4 @@ public class ServiceRequestInterceptor implements ClientHttpRequestInterceptor {
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(path).matches();
     }
-
-    public static void main(String[] args) throws URISyntaxException {
-
-        boolean result = isMatch("https://10.224.1.50/vas-service/api/v1/packages?customer_group=NEW_USER", ".*/vas-service/api/v1/packages.*");
-        // boolean result = isMatch("http://www.mocky.io/v2/5b31c0e7310000703a1293ad?mocky-delay=2500ms", "http://www.mocky.io/v2/.*");
-
-        System.out.println("... " + result);
-    }
 }
