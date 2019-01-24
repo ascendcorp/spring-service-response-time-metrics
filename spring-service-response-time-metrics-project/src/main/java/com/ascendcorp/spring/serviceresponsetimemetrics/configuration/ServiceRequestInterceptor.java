@@ -7,7 +7,6 @@ import org.springframework.http.client.ClientHttpResponse;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.List;
