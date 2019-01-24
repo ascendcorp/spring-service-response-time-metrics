@@ -1,6 +1,5 @@
 package com.ascendcorp.spring.serviceresponsetimemetrics.configuration;
 
-import com.ascendcorp.spring.serviceresponsetimemetrics.dto.GroupedUrl;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -37,7 +36,7 @@ public class ServiceRequestInterceptor implements ClientHttpRequestInterceptor {
             response = clientHttpRequestExecution.execute(httpRequest, bytes);
             String regexUrl = toRegexPath(httpRequest.getURI());
 
-            MetricInfo metricInfo = new MetricInfo(regexUrl, response.getRawStatusCode(), Duration.between(start, LocalTime.now()).toMillis());
+            MetricInfo metricInfo = new MetricInfo(httpRequest.getMethod(), regexUrl, response.getRawStatusCode(), Duration.between(start, LocalTime.now()).toMillis());
             MetricPublisherConfig.publish(metricInfo);
 
         } catch (IOException e) {
@@ -50,10 +49,10 @@ public class ServiceRequestInterceptor implements ClientHttpRequestInterceptor {
     private String toRegexPath(URI uri) {
         final String fullPath = uri.toString();
 
-        if(groupedUrls == null) return fullPath;
+        if (groupedUrls == null) return fullPath;
 
-        for(String url : groupedUrls) {
-            if(isMatch(fullPath, createRegexForURL(url))) return createRegexForURL(url);
+        for (String url : groupedUrls) {
+            if (isMatch(fullPath, createRegexForURL(url))) return createRegexForURL(url);
         }
 
         return fullPath;

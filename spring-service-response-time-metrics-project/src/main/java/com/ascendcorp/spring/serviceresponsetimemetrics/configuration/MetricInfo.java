@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.http.HttpMethod;
 
 @Setter
 @Getter
@@ -11,6 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MetricInfo {
 
+    private HttpMethod httpMethod;
     private String endpoint;
     private int httpStatus;
     private long durationInMilliSec;
