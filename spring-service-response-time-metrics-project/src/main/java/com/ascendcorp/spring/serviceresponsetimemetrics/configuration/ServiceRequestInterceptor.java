@@ -41,23 +41,15 @@ public class ServiceRequestInterceptor implements ClientHttpRequestInterceptor {
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution clientHttpRequestExecution) throws IOException {
         LocalTime start = LocalTime.now();
-
         String regexUrl = toRegexPath(request.getURI());
-
         try {
             ClientHttpResponse response = clientHttpRequestExecution.execute(request, body);
             publishMetrics(request, start, regexUrl, response.getStatusCode());
             return response;
-
         } catch (IOException exception) {
             publishMetrics(request, start, regexUrl, HttpStatus.SERVICE_UNAVAILABLE);
             throw exception;
-
-        } catch (Exception exception) {
-            publishMetrics(request, start, regexUrl, HttpStatus.INTERNAL_SERVER_ERROR);
-            throw exception;
         }
-
     }
 
     private void publishMetrics(HttpRequest request, LocalTime start, String regexUrl, HttpStatus statusCode) throws IOException {
@@ -67,13 +59,10 @@ public class ServiceRequestInterceptor implements ClientHttpRequestInterceptor {
 
     private String toRegexPath(URI uri) {
         final String fullPath = uri.toString();
-
         if (groupedUrls == null) return fullPath;
-
         for (String url : groupedUrls) {
             if (isMatch(fullPath, createRegexForURL(url))) return createRegexForURL(url);
         }
-
         return fullPath;
     }
 }
