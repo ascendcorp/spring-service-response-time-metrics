@@ -1,7 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.0.1] - TBC
+
+## [1.1.1] - 
+### Changed
+- Append httpStatusCode for the metric hash map key
+
+
+## [1.0.1] - 
 ### Changed
 - Thread-safe by change from Hashmap to ConcurrentHashMap
 
