@@ -14,7 +14,7 @@ public class MetricInfo {
 
     private HttpMethod httpMethod;
     private String endpoint;
-    private int httpStatus;
+    private int httpStatusCode;
     private long durationInMilliSec;
 
 }

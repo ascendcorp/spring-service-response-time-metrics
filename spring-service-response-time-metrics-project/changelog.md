@@ -1,7 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.0.1] - TBC
+
+## [1.1.1] - 2019-02-18
+### Changed
+- Append httpStatusCode for the metric hash map key
+
+## [1.1.0] - 2019-01-24
+### Changed
+- Change handle exception due to NullPointerException in case of request timeout
+- Fix missing HTTP request method in metric
+
+## [1.0.1] - 
 ### Changed
 - Thread-safe by change from Hashmap to ConcurrentHashMap
 
