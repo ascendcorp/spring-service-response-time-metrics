@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -17,6 +18,9 @@ import java.util.Optional;
 @ConfigurationProperties(prefix = "service-response-time")
 public class ServiceResponseTimeConfig {
 
+    /**
+     * Grouped url in case of any part variable url and prefer a single metric for those endpoint
+     */
     private List<String> groupedUrls;
 
     @Bean
@@ -33,7 +37,7 @@ public class ServiceResponseTimeConfig {
     }
 
     private void setClientRequestInterceptorToInterceptor(RestTemplate restTemplate) {
-        List interceptors = restTemplate.getInterceptors();
+        List<ClientHttpRequestInterceptor> interceptors = restTemplate.getInterceptors();
         interceptors.add(new ServiceRequestInterceptor(this.groupedUrls));
     }
 }

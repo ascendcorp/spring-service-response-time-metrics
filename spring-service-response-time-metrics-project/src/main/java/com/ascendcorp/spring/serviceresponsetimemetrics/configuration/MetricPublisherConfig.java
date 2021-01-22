@@ -9,10 +9,9 @@ import java.util.function.ToDoubleFunction;
 
 public class MetricPublisherConfig {
 
-    private static String NAME_RESPONSE_TIME_MS = "spring_response_time_ms";
-
-    private static MetricPublisherConfig instance = new MetricPublisherConfig();
-    private static Map<String, MetricInfo> metricInfoMap = new ConcurrentHashMap();
+    private static final String NAME_RESPONSE_TIME_MS = "spring_response_time_ms";
+    private static final MetricPublisherConfig instance = new MetricPublisherConfig();
+    private static final Map<String, MetricInfo> metricInfoMap = new ConcurrentHashMap<>();
 
     public MetricPublisherConfig() {
         System.out.println("MetricPublisherConfig created");
@@ -21,7 +20,7 @@ public class MetricPublisherConfig {
     public static void publish(MetricInfo metricInfo) {
         String metricInfoKey = metricInfo.getHttpStatusCode() + metricInfo.getHttpMethod().toString() + metricInfo.getEndpoint();
         metricInfoMap.put(metricInfoKey, metricInfo);
-        ToDoubleFunction referenceMethod = (value) -> instance.getDurationInMilliSec(metricInfoKey);
+        ToDoubleFunction<Object> referenceMethod = (value) -> instance.getDurationInMilliSec(metricInfoKey);
 
         Metrics.gauge(NAME_RESPONSE_TIME_MS, Tags.of("status", Integer.toString(metricInfo.getHttpStatusCode()), "method", metricInfo.getHttpMethod().toString(), "uri", metricInfo.getEndpoint()), instance, referenceMethod);
     }
