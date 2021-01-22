@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 
 
+
+## [1.1.2] - 2021-01-22
+### Changed
+- Add properties hint
+
 ## [1.1.1] - 2019-02-18
 ### Changed
 - Append httpStatusCode for the metric hash map key

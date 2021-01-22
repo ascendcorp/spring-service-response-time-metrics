@@ -22,7 +22,7 @@ This class purpose for measuring Service (call to) response time
 
 public class ServiceRequestInterceptor implements ClientHttpRequestInterceptor {
 
-    private List<String> groupedUrls;
+    private final List<String> groupedUrls;
 
     public ServiceRequestInterceptor(List<String> groupedUrls) {
         this.groupedUrls = groupedUrls;
@@ -52,7 +52,7 @@ public class ServiceRequestInterceptor implements ClientHttpRequestInterceptor {
         }
     }
 
-    private void publishMetrics(HttpRequest request, LocalTime start, String regexUrl, HttpStatus statusCode) throws IOException {
+    private void publishMetrics(HttpRequest request, LocalTime start, String regexUrl, HttpStatus statusCode) {
         MetricInfo metricInfo = new MetricInfo(request.getMethod(), regexUrl, statusCode.value(), Duration.between(start, LocalTime.now()).toMillis());
         MetricPublisherConfig.publish(metricInfo);
     }
