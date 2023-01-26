@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.ascendcorp.spring.serviceresponsetimemetrics.dto.ServiceResponseTimeConfig
+  com.ascendcorp.spring.serviceresponsetimemetrics.dto.ServiceResponseTimeConfig,\
+  com.ascendcorp.spring.serviceresponsetimemetrics.service.HealthService

@@ -1,6 +1,5 @@
 package com.example.demo.configuration;
 
-import com.ascendcorp.spring.serviceresponsetimemetrics.configuration.ServiceRequestInterceptor;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
@@ -25,7 +24,6 @@ import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 
 @Configuration
