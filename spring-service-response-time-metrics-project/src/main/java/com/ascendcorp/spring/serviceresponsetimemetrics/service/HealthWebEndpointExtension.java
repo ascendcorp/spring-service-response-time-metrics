@@ -1,6 +1,5 @@
 package com.ascendcorp.spring.serviceresponsetimemetrics.service;
 
-import io.lettuce.core.RedisConnectionException;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
@@ -16,7 +15,6 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -24,11 +22,18 @@ import java.util.Objects;
 @Data
 public class HealthWebEndpointExtension implements HealthIndicator {
 
+    private static final String PREFIX = "health";
+    private static final String UP = "UP";
+    private static final String DOWN = "DOWN";
+    private static final String BODY = "body";
+    private static final String STATUS = "status";
+    private static final String DETAIL = "detail";
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private String name;
 
-    private boolean considered;
+    private boolean aggregated;
 
     private String url;
 
@@ -38,39 +43,48 @@ public class HealthWebEndpointExtension implements HealthIndicator {
     @Autowired(required = false)
     private HealthNotification healthNotification;
 
+    private int interval = 0;
+    private Health health;
+    private long lastUpdate;
+
     @Override
     public Health health() {
-        ResponseEntity<Map> response = to(url);
-
-        String reason = "Server does not respond";
-        String status = "DOWN";
-
-        Map detail = new HashMap<>();
-        detail.put("body", null);
-        boolean up = false;
-        if (Objects.nonNull(response) && response.getStatusCode().is2xxSuccessful()) {
-            reason = "Server is up";
-            detail.put("body", response.getBody());
-            up = true;
-            status = "UP";
+        if(withinInterval()) {
+            return health;
         }
 
-        if(!considered) {
+        ResponseEntity<Map> response = to(url);
+
+        String status = DOWN;
+
+        Map detail = new HashMap<>();
+        detail.put(BODY, null);
+        boolean up = false;
+        if (Objects.nonNull(response) && response.getStatusCode().is2xxSuccessful()) {
+            detail.put(BODY, response.getBody());
             up = true;
+            status = UP;
         }
 
         detail.put("url", url);
-        Health health;
         if(up) {
             health = Health.up()
-                    .withDetail("reason", reason)
-                    .withDetail("detail", detail)
+                    .withDetail(STATUS, status)
+                    .withDetail(DETAIL, detail)
                     .build();
         } else {
-            health = Health.down()
-                    .withDetail("reason", reason)
-                    .withDetail("detail", detail)
-                    .build();
+            if(!aggregated) {
+                health = Health.unknown()
+                        .withDetail("status", status)
+                        .withDetail("detail", detail)
+                        .build();
+            } else {
+                health = Health.down()
+                        .withDetail("status", status)
+                        .withDetail("detail", detail)
+                        .build();
+            }
+
         }
 
         try {
@@ -81,8 +95,17 @@ public class HealthWebEndpointExtension implements HealthIndicator {
         return health;
     }
 
+    private boolean withinInterval() {
+        if((System.currentTimeMillis() - lastUpdate) < interval) {
+            return true;
+        } else {
+            lastUpdate = System.currentTimeMillis();
+            return false;
+        }
+    }
+
     private void validateCacheChanged(String status) {
-        Object cached = getRedisCacheData("system", name);
+        Object cached = getRedisCacheData(PREFIX, name);
         boolean update = false;
         if(cached == null) {
             update = true;
@@ -92,7 +115,7 @@ public class HealthWebEndpointExtension implements HealthIndicator {
         }
 
         if(update) {
-            putRedisCacheData("system", name, status);
+            putRedisCacheData(PREFIX, name, status);
         }
     }
 
@@ -120,7 +143,6 @@ public class HealthWebEndpointExtension implements HealthIndicator {
                     .build();
 
             HttpClient httpClient = HttpClient.create().secure(t -> t.sslContext(sslContext));
-
             WebClient webClient = WebClient.builder().clientConnector(new ReactorClientHttpConnector(httpClient)).build();
 
              return webClient.get().uri(url)

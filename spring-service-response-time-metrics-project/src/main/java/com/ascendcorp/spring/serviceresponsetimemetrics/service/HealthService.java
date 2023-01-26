@@ -18,7 +18,7 @@ public class HealthService {
 
     private List<Endpoint> endpoints;
 
-    private boolean mainStatusConsidered;
+    private boolean mainStatusAggregated;
 
     @Bean
     public Optional add(DefaultListableBeanFactory context) {
@@ -31,7 +31,8 @@ public class HealthService {
             String bean = "" + n.name;
             gbd.getPropertyValues().addPropertyValue("name", bean);
             gbd.getPropertyValues().addPropertyValue("url", n.url);
-            gbd.getPropertyValues().addPropertyValue("considered", mainStatusConsidered);
+            gbd.getPropertyValues().addPropertyValue("aggregated", mainStatusAggregated);
+            gbd.getPropertyValues().addPropertyValue("interval", n.interval);
 
             context.registerBeanDefinition(bean, gbd);
         });
@@ -41,8 +42,8 @@ public class HealthService {
 
     @Data
     public static class Endpoint {
-
         private String name;
         private String url;
+        private int interval;
     }
 }

@@ -9,9 +9,11 @@ management:
         info: /info
         prometheus: /metrics
         metrics: /actuator/metrics
+  endpoint:
+    health:
+      show-details: always
 
   health:
-    show-details: always
     redis:
       enabled: false
 
@@ -24,7 +26,8 @@ service-response-time:
     - .*/vas-service/packages.*
 
 third-party-health-checker:
-  main-status-considered: false
+  main-status-aggregated: false
   endpoints:
     - name: otherservice
-      url: https://ip-address/health.php
+      url: https://ip-address/health.phpx
+      interval: 10000
