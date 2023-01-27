@@ -29,5 +29,5 @@ third-party-health-checker:
   main-status-aggregated: false
   endpoints:
     - name: otherservice
-      url: https://ip-address-invalid-1234/health.php
+      url: https://ip-address-invalid-1234/health
       interval: 10000
