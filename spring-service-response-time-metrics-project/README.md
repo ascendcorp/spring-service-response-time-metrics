@@ -22,9 +22,10 @@ in case of any part variable url and prefer a single metric for those endpoint c
 
 ```
     service-response-time:
-          grouped-urls:
-            - .*/api/v1/banners/.*
-            - .*/cashier-api/payment/sof.*
+      enabled: true  
+      grouped-urls:
+        - .*/api/v1/banners/.*
+        - .*/cashier-api/payment/sof.*
 ```
 
 
@@ -52,7 +53,7 @@ in case of checking health for any third-party service
           interval: 10000
 ```
 
-It works with your health path like below
+It works with your health path as below.
 
 ```
 {
@@ -84,6 +85,20 @@ It works with your health path like below
 }
 ```
 
+It is easy to custom your any notification method with implementing HealthNotification service.
+
+```
+
+@Service
+public class NotificationService implements HealthNotification {
+    @Override
+    public void push(String message) {
+        // any kind of messenger application such as Google-chat, Line, etc.
+        lineNotifyClient.notify(message);
+    }
+}
+
+```
 
 -------------------------------------
 _Licensed under [Apache Software License 2.0](https://www.apache.org/licenses/LICENSE-2.0)_
