@@ -21,6 +21,7 @@ server:
   port: 8080
 
 service-response-time:
+  enabled: true
   grouped-urls:
     - http://www.mocky.io/v2/.*
     - .*/vas-service/packages.*
