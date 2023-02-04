@@ -23,16 +23,23 @@ public class ServiceResponseTimeConfig {
      */
     private List<String> groupedUrls;
 
+    private boolean enabled = true;
+
     @Bean
     public Optional addGlobalInterceptor(ApplicationContext ctx) {
-        System.out.println("Add global interceptor " + this.groupedUrls);
 
-        Map<String, RestTemplate> allRestTemplate = ctx.getBeansOfType(RestTemplate.class);
+        if(enabled) {
+            System.out.println("Enabled service-response-time");
+            System.out.println("Add global interceptor " + this.groupedUrls);
 
-        for (Map.Entry<String, RestTemplate> entry : allRestTemplate.entrySet()) {
-            setClientRequestInterceptorToInterceptor(entry.getValue());
+            Map<String, RestTemplate> allRestTemplate = ctx.getBeansOfType(RestTemplate.class);
+
+            for (Map.Entry<String, RestTemplate> entry : allRestTemplate.entrySet()) {
+                setClientRequestInterceptorToInterceptor(entry.getValue());
+            }
+        } else {
+            System.out.println("Disabled service-response-time");
         }
-
         return Optional.empty();
     }
 

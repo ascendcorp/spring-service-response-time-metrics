@@ -5,16 +5,30 @@ management:
         include: info, health, prometheus, metrics
       base-path: /
       path-mapping:
-        health: s1/health
-        info: s1/info
+        health: /health
+        info: /info
         prometheus: /metrics
         metrics: /actuator/metrics
+  endpoint:
+    health:
+      show-details: always
+
+  health:
+    redis:
+      enabled: false
 
 server:
   port: 8080
 
 service-response-time:
+  enabled: true
   grouped-urls:
     - http://www.mocky.io/v2/.*
     - .*/vas-service/packages.*
 
+third-party-health-checker:
+  main-status-aggregated: false
+  endpoints:
+    - name: otherservice
+      url: https://ip-address-invalid-1234/health
+      interval: 10000
